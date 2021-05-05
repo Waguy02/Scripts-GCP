@@ -32,7 +32,7 @@ for message_size in MESSAGE_SIZES:
             tasks=[]
             if(START>=n):
                 continue
-            for id in range(START,START+NB_CPUS):
+            for id in range(START,min(START+NB_CPUS,n)):
                 tasks.append(multiprocessing.Process(target=task,args=[t,n,message_size,id]))
             for t in tasks:
                 t.start()
