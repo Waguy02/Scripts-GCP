@@ -6,7 +6,7 @@ NB_CPUS=8
 
 
 def task(t,n,message_size,id):
-    subprocess.call(["python3","gen_sign_verif_gcp.py",t + 1,n, message_size,id + 1])
+    subprocess.call(["python3","gen_sign_verif_gcp.py",str(t + 1),str(n), str(message_size),str(id + 1)])
 
 MESSAGE_SIZES=[64,128]
 N_VALUES=[10,20]
