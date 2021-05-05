@@ -1,5 +1,5 @@
 import subprocess,sys
-import threading
+import multiprocessing
 NB_CPUS=8
 
 
@@ -24,7 +24,7 @@ for message_size in MESSAGE_SIZES:
 
             tasks=[]
             for id in range(n):
-                tasks.append(threading.Thread(target=task,args=[t,n,message_size,id]))
+                tasks.append(multiprocessing.Process(target=task,args=[t,n,message_size,id]))
 
             for t in tasks:
                 t.start()
