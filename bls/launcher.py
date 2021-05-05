@@ -17,7 +17,7 @@ for message_size in MESSAGE_SIZES:
             t=int(n*threshold)
             tasks=[]
             for id in range(n):
-                tasks.append[threading.Thread(target=task,args=[t,n,message_size,id])]
+                tasks.append(threading.Thread(target=task,args=[t,n,message_size,id]))
 
             for t in tasks:
                 t.start()
