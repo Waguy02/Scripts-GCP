@@ -39,10 +39,11 @@ message = "".join("a" for i in range(message_size))
 
 
 def generate_key(t,n):
-    file=open(f'target/keys/public_key{t}_{n}','w')
-    print()
-    subprocess.run(f'./cli --addr {addr} keygen -t {t} -n {n} --output target/keys/key{t}_{n}_{id}|tail -n1 > target/keys/public_key{t}_{n}',shell=True).stdout    
-	
+    if id==1:
+        subprocess.run(f'./cli --addr {addr} keygen -t {t} -n {n} --output target/keys/key{t}_{n}_{id}|tail -n1 > target/keys/public_key{t}_{n}',shell=True).stdout
+    else:
+        subprocess.run(f'./cli --addr {addr} keygen -t {t} -n {n} --output target/keys/key{t}_{n}_{id}',shell=True).stdout
+
 generate_key(t, n)
 
 
@@ -52,6 +53,7 @@ def sign(t,n,message):
     #     return
     begining=time.process_time()
     #print(f"./cli --addr {addr} sign -n {t}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}_{id}.txt")
+
     if id ==1 :
         subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}.txt",shell=True).stdout
     else :
@@ -76,6 +78,8 @@ def sign(t,n,message):
 
 
 def verify(t,n,message,signature):
+    if id!=1:
+        return
 	f=open(f"target/keys/public_key{t}_{n}","r")
 	pk_raw=f.read()
 	f.close()
@@ -106,6 +110,7 @@ def report():
     csv_file=open(f"target/signatures/output_dataset.csv","a")
     writer=csv.writer(csv_file)
     "Check if we need to add the header or not"
+
     if not exists:
     	csv_header=["t","n","message_size","signature_size","signature_duration","verification_duration"]
     	writer.writerows([csv_header])
