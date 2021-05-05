@@ -52,8 +52,14 @@ def sign(t,n,message):
     #     return
     begining=time.process_time()
     #print(f"./cli --addr {addr} sign -n {t}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}_{id}.txt")
-    subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}.txt",shell=True).stdout
-    duration=time.process_time()-begining 
+    if id ==1 :
+        subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}.txt",shell=True).stdout
+    else :
+        subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}",shell=True)
+        return
+
+
+    duration=time.process_time()-begining
     f=open(f'target/signatures/signature{t}_{n}.txt',"r")
     signature=f.read().split("Signature:")[1].strip()
     sign_len=len(signature)
