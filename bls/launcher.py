@@ -16,7 +16,7 @@ THRESHOLD_VALUES=[0.5,0.7,0.8,0.9]
 for message_size in MESSAGE_SIZES:
     for n in N_VALUES:
 
-        t_values= list(set( map(lambda ts:n*ts+1),THRESHOLD_VALUES )) ## Unique corresponding t_values
+        t_values= list(set( map(lambda ts:n*ts+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
 
         for t in t_values :
             if( t >n):
