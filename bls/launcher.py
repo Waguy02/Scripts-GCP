@@ -8,7 +8,7 @@ end=start+sys.argv[1]
 
 
 def task(t,n,message_size,id):
-    subprocess.run(f"python gen_sign_verif_gcp.py {t + 1} {n} {message_size} {id + 1}")
+    subprocess.run(f"python3 gen_sign_verif_gcp.py {t + 1} {n} {message_size} {id + 1}")
 
 MESSAGE_SIZES=[64,128]
 N_VALUES=[10,20]
