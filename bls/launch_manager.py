@@ -2,4 +2,4 @@ import subprocess,sys
 
 
 
-subprocess.run("python run_server.py")
+subprocess.run("python3 run_server.py")
