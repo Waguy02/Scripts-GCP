@@ -2,8 +2,6 @@ import subprocess,sys
 import threading
 NB_CPUS=8
 
-start=sys.argv[0]
-end=start+sys.argv[1]
 
 
 
