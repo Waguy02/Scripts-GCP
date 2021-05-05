@@ -54,6 +54,7 @@ def sign(t,n,message):
     begining=time.process_time()
     #print(f"./cli --addr {addr} sign -n {t}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}_{id}.txt")
 
+    os.system("rm target/signatures/signature{t}_{n}.txt")
     if id ==1 :
         subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}.txt",shell=True).stdout
     else :
@@ -78,6 +79,8 @@ def sign(t,n,message):
 
 
 def verify(t,n,message,signature):
+    if id != 1:
+        return
     f=open(f"target/keys/public_key{t}_{n}","r")
     pk_raw=f.read()
     f.close()
@@ -88,9 +91,6 @@ def verify(t,n,message,signature):
     duration=time.process_time()-begining
 
     f=open(f'target/signatures/signature{t}_{n}.txt',"a")
-
-    if id != 1:
-        return
     f.write(f"\nVerification duration: {duration}")
     f.close()
     row_output.append(duration)
