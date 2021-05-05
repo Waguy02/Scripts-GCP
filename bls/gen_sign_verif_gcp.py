@@ -8,8 +8,6 @@ from os import path
 import subprocess
 
 
-#subprocess.run("ls",stdout=open("ls_files.txt","w"))
-#exit(0)
 
 ##PARSING ARGS
 assert(len(sys.argv)>=5)
