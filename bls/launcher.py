@@ -19,7 +19,7 @@ for message_size in MESSAGE_SIZES:
         t_values= list(set( map(lambda ts:int(n*ts)+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
 
         for t in t_values :
-            if( t >n):
+            if t >n:
                 break
 
             tasks=[]
