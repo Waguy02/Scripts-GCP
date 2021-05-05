@@ -44,7 +44,7 @@ def generate_key(t,n):
     else:
         subprocess.run(f'./cli --addr {addr} keygen -t {t} -n {n} --output target/keys/key{t}_{n}_{id}',shell=True).stdout
 
-generate_key(t, n)
+
 
 
 
@@ -114,6 +114,7 @@ def report():
     writer.writerows([row_output])
     csv_file.close()
 
+generate_key(t, n)
 
 signature=sign(t,n,message) #Production de la signature
 
