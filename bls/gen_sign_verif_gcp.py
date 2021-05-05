@@ -36,7 +36,7 @@ if not path.exists("target/signatures"):
 
 row_output=[t,n,message_size]
 letters = string.ascii_lowercase
-message = "".join("a" for i in range(message_size))	
+message = "".join("a" for i in range(message_size))
 
 
 
@@ -50,6 +50,8 @@ generate_key(t, n)
 
 
 def sign(t,n,message):
+    if id>t:
+        return
     begining=time.process_time()
     #print(f"./cli --addr {addr} sign -n {t}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}_{id}.txt")
     subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}.txt",shell=True).stdout
@@ -89,6 +91,8 @@ def verify(t,n,message,signature):
 
 
 def report():
+    if id!=1:
+        return
     ## Report result
     exists=False
     if path.exists("target/signatures/output_dataset.csv"):
@@ -104,7 +108,7 @@ def report():
     writer.writerows([row_output])
     csv_file.close()
 
-    
+
 signature=sign(t,n,message) #Production de la signature
 
 verify(t,n,message,signature) #Vérification de la signature
