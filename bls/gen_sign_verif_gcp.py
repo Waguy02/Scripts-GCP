@@ -48,8 +48,8 @@ generate_key(t, n)
 
 
 def sign(t,n,message):
-    if id>t+1:
-        return
+    # if id>t+1:
+    #     return
     begining=time.process_time()
     #print(f"./cli --addr {addr} sign -n {t}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}_{id}.txt")
     subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}.txt",shell=True).stdout
