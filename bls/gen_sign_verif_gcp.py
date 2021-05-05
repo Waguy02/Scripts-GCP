@@ -81,20 +81,18 @@ def verify(t,n,message,signature):
     if id!=1:
         return
 	f=open(f"target/keys/public_key{t}_{n}","r")
-	pk_raw=f.read()
-	f.close()
+    pk_raw=f.read()
+    f.close()
+    pk=pk_raw.split("Public key:")[1].strip()
+    print("Public key ",pk)
+    begining=time.process_time()
+    subprocess.run(f'./cli --addr {addr} verify --digits {message} --signature {signature} --public-key {pk}',shell=True)
+    duration=time.process_time()-begining
 
-	pk=pk_raw.split("Public key:")[1].strip()
-	print("Public key ",pk)
-	begining=time.process_time()
-	subprocess.run(f'./cli --addr {addr} verify --digits {message} --signature {signature} --public-key {pk}',shell=True)
-	duration=time.process_time()-begining
-
-	f=open(f'target/signatures/signature{t}_{n}.txt',"a")
-	f.write(f"\nVerification duration: {duration}")
-	f.close()
-
-	row_output.append(duration)
+    f=open(f'target/signatures/signature{t}_{n}.txt',"a")
+    f.write(f"\nVerification duration: {duration}")
+    f.close()
+    row_output.append(duration)
 
 
 
