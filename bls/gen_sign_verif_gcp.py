@@ -78,9 +78,7 @@ def sign(t,n,message):
 
 
 def verify(t,n,message,signature):
-    if id!=1:
-        return
-	f=open(f"target/keys/public_key{t}_{n}","r")
+    f=open(f"target/keys/public_key{t}_{n}","r")
     pk_raw=f.read()
     f.close()
     pk=pk_raw.split("Public key:")[1].strip()
@@ -90,6 +88,9 @@ def verify(t,n,message,signature):
     duration=time.process_time()-begining
 
     f=open(f'target/signatures/signature{t}_{n}.txt',"a")
+
+    if id != 1:
+        return
     f.write(f"\nVerification duration: {duration}")
     f.close()
     row_output.append(duration)
