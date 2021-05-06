@@ -7,7 +7,7 @@ import subprocess,sys
 import multiprocessing
 import multiprocessing as mp
 import threading
-NB_CPUS=mp.cpu_count()-1
+NB_CPUS=mp.cpu_count()
 TASK_PER_CPU=8 ##TASK PER CPU
 
 
@@ -21,22 +21,24 @@ if len (sys.argv)>1:
 
 
 def task(t0,n,message_size,id):
+
+    def f(t):
+        subprocess.call(["python3", "gen_sign_verif_gcp.py", str(t), str(n), str(message_size), str(id + 1)])
+
     subtasks=[]
     for t in range(t0,t0+TASK_PER_CPU):
         if t>n:
             break
-        st=threading.Thread(target=lambda :subprocess.call(["python3","gen_sign_verif_gcp.py",str(t),str(n), str(message_size),str(id + 1)]))
+        st=threading.Thread(target=f,args=[t])
         subtasks.append(st)
     
     for st in subtasks:
         st.start()
-    for st in subtasks:
-        st.join()
-        
+        subprocess.call(["python3", "gen_sign_verif_gcp.py", str(t), str(n), str(message_size), str(id + 1)])
         
     
 MESSAGE_SIZES=[64,128]
-N_VALUES=[10,20,30,50,70,80,90,100,110,120]
+N_VALUES=[20,30,40,]
 THRESHOLD_VALUES=[0.5,0.7,0.8,0.9]
 
 
