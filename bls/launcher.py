@@ -26,7 +26,7 @@ def task(t,n,message_size,id0):
 
     subtasks=[]
     for id in range(id0,id0+TASK_PER_CPU):
-        if id>n:
+        if id>=n:
             break
         st=threading.Thread(target=f,args=[id])
         subtasks.append(st)
