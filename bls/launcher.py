@@ -5,7 +5,12 @@
 
 import subprocess,sys
 import multiprocessing
-NB_CPUS=7
+import multiprocessing as mp
+
+NB_CPUS=mp.cpu_count()
+TASK_PER_CPU=8 ##TASK PER CPU
+
+
 
 ##Start is used to parallelized processing
 START=0
@@ -15,8 +20,11 @@ if len (sys.argv)>1:
 
 
 
-def task(t,n,message_size,id):
-    subprocess.call(["python3","gen_sign_verif_gcp.py",str(t),str(n), str(message_size),str(id + 1)])
+def task(t0,n,message_size,id):
+    for t in range(t0,t0+TASK_PER_CPU):
+        if t>n:
+            break
+        subprocess.call(["python3","gen_sign_verif_gcp.py",str(t),str(n), str(message_size),str(id + 1)])
 
 MESSAGE_SIZES=[64,128]
 N_VALUES=[10,20,30,40,49]
@@ -32,7 +40,7 @@ for message_size in MESSAGE_SIZES:
             tasks=[]
             if(START>=n):
                 continue
-            for id in range(START,min(START+NB_CPUS,n)):
+            for id in range(START,min(START+NB_CPUS,n),TASK_PER_CPU):
                 tasks.append(multiprocessing.Process(target=task,args=[t,n,message_size,id]))
             for t in tasks:
                 t.start()
