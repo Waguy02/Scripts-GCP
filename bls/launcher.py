@@ -21,7 +21,6 @@ if len (sys.argv)>1:
 
 
 def task(t0,n,message_size,id):
-
     def f(t):
         subprocess.call(["python3", "gen_sign_verif_gcp.py", str(t), str(n), str(message_size), str(id + 1)])
 
@@ -34,9 +33,11 @@ def task(t0,n,message_size,id):
     
     for st in subtasks:
         st.start()
-        subprocess.call(["python3", "gen_sign_verif_gcp.py", str(t), str(n), str(message_size), str(id + 1)])
-        
-    
+
+    for st in subtasks:
+        st.join()
+
+
 MESSAGE_SIZES=[64,128]
 N_VALUES=[20,30,40,]
 THRESHOLD_VALUES=[0.5,0.7,0.8,0.9]
