@@ -25,7 +25,7 @@ def task(t,n,message_size,id):
 
 MESSAGE_SIZES=[64,128]
 N_VALUES=[15]
-THRESHOLD_VALUES=[0.3,0.4,0.5,0.7,0.8,0.9]
+THRESHOLD_VALUES=[0.4,0.5,0.7,0.8,0.9]
 
 
 for message_size in MESSAGE_SIZES:
