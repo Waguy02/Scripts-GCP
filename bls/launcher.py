@@ -35,7 +35,6 @@ for message_size in MESSAGE_SIZES:
             if t >n:
                 break
             tasks=[]
-
             for id in range(n):
                 tasks.append(multiprocessing.Process(target=task,args=[t,n,message_size,id]))
             for t in tasks:
