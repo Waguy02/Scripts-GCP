@@ -26,7 +26,7 @@ def task(t,n,message_size,id):
     subprocess.call(["python3","gen_sign_verif_gcp.py",str(t),str(n), str(message_size),str(id + 1)])
 
 MESSAGE_SIZES=[64,128]
-N_VALUES=[5,10,15,50,100,500]
+N_VALUES=[3,4,5,6,7,8,9,10]
 THRESHOLD_VALUES=[0.3,0.6,0.75]
 
 

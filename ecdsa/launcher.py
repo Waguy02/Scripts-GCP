@@ -95,10 +95,9 @@ def report(row):
     writer.writerows([row])
     csv_file.close()
 
-
 MESSAGE_SIZES=[64,128]
-N_VALUES=[10,20]
-THRESHOLD_VALUES=[0.3,0.4,0.5,0.7,0.8,0.9]
+N_VALUES=[3,4,5,6,7,8,9,10]
+THRESHOLD_VALUES=[0.3,0.6,0.75]
 
 def main():
     #LAUCHING SERVER
