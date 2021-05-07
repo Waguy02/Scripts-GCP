@@ -1,5 +1,0 @@
-
-Message size: 64; t:11; n:20
-Signature size: 96
-Signature duration: 0.000833754000000006
-Verification duration: 0.0008386780000000094

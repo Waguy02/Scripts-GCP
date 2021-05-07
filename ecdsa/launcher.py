@@ -84,7 +84,6 @@ def report(row):
     if path.exists("output_dataset.csv"):
         exists=True
     
-    
     ##The output dataset for generating curves
     csv_file=open("output_dataset.csv","a")
     writer=csv.writer(csv_file)
@@ -95,9 +94,6 @@ def report(row):
     	writer.writerows([csv_header])
     writer.writerows([row])
     csv_file.close()
-
-
-
 
 
 MESSAGE_SIZES=[64,128]

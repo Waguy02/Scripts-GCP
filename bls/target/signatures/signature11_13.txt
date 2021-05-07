@@ -1,1 +1,0 @@
-[2mMay 06 10:38:14.710[0m [31mERROR[0m cli: read file with local secret key

@@ -1,1 +1,5 @@
-[2mMay 06 10:38:15.553[0m [31mERROR[0m cli: read file with local secret key
+
+Message size: 64; t:5; n:15
+Signature size: 96
+Signature duration: 0.0007605630000000058
+Verification duration: 0.00046932199999999424

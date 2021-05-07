@@ -22,22 +22,30 @@ if len (sys.argv)>1:
 
 
 def task(t,n,message_size,id):
+    assert(t<=n)
     subprocess.call(["python3","gen_sign_verif_gcp.py",str(t),str(n), str(message_size),str(id + 1)])
 
 MESSAGE_SIZES=[64,128]
 N_VALUES=[5,10,15,50,100,500]
-THRESHOLD_VALUES=[0.3,0.4,0.5,0.7,0.8,0.9]
+THRESHOLD_VALUES=[0.3,0.6,0.75]
 
 
 for message_size in MESSAGE_SIZES:
+    
     for n in N_VALUES:
         t_values= list(set( map(lambda ts:int(n*ts)+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
-        def f(t):
-            return task(t,n,message_size,id)
-        pool = mp.Pool(NB_CPUS, maxtasksperchild=int(NB_CPUS / len(t_values)) + 1)
-        pool.map(f,t_values)
-        pool.join()
+        
+        for t in t_values:
+            if t>=n:
+                break
+                
+            def f(id):
+                task(t,n,message_size,id)
 
+            pool = mp.Pool(n)
+            pool.map(f,range(n))
+            pool.close()
+            pool.join()
 
 
 
