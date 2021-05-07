@@ -31,12 +31,30 @@ THRESHOLD_VALUES=[0.3,0.4,0.5,0.7,0.8,0.9]
 
 for message_size in MESSAGE_SIZES:
     for n in N_VALUES:
+
+
+
         t_values= list(set( map(lambda ts:int(n*ts)+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
-        def f(t):
+
+
+
+
+        def f(id):
             return task(t,n,message_size,id)
-        pool = mp.Pool(NB_CPUS, maxtasksperchild=int(NB_CPUS / len(t_values)) + 1)
+        pool = mp.Pool(NB_CPUS, maxtasksperchild=int(NB_CPUS / n) + 1)
         pool.map(f,t_values)
-        pool.join()
+
+
+        for t in t_values :
+            if t >n:
+                break
+            tasks=[]
+            for id in range(n):
+                tasks.append(multiprocessing.Process(target=task,args=[t,n,message_size,id]))
+            for t in tasks:
+                t.start()
+            for t in tasks:
+                t.join()
 
 
 
