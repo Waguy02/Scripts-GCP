@@ -46,6 +46,7 @@ def generate_keys(n,t):
         tasks.append(multiprocessing.Process(target=task,args=[id]))
     for t in tasks:
         t.start()
+        time.sleep(3)
     for t in tasks:
         t.join()
     duration=time.process_time()-beginning
@@ -64,6 +65,7 @@ def sign(message_size,t):
         tasks.append(multiprocessing.Process(target=task,args=[id]))
     for t in tasks:
         t.start()
+        time.sleep(3)
     for t in tasks:
         t.join()
 
