@@ -5,6 +5,7 @@
 
 import subprocess,sys,os,csv
 import multiprocessing,threading
+
 from os import path
 
 
@@ -32,35 +33,39 @@ def generate_message(message_size):
 
 
 
-def generate_keys(n,t):  
+def generate_keys(n,t):
     os.system("rm keys/keys?.store")
     os.system("rm signature")
     write_params(n, t)
     beginning=time.process_time()
     def task(id):
         subprocess.call(["./gg18_keygen_client", "http://127.0.0.1:8001", f'keys/keys{id+1}.store'])
-    pool = multiprocessing.Pool(n)
-    pool.map(task, range(n))
 
+    tasks=[]
+    for id in range(n):
+        tasks.append(multiprocessing.Process(target=task,args=[id]))
+    for t in tasks:
+        t.start()
+    for t in tasks:
+        t.join()
     duration=time.process_time()-beginning
-    return duration    
+    return duration
 
 
 
 def sign(message_size,t):
-
     message=generate_message(message_size)
     beginning=time.process_time()
     def task(id):
             subprocess.call(["./gg18_sign_client", "http://127.0.0.1:8001", f'keys/keys{id+1}.store',message])
     tasks=[]
 
-    def task(id):
-        subprocess.call(["./gg18_keygen_client", "http://127.0.0.1:8001", f'keys/keys{id + 1}.store'])
-
-    pool = multiprocessing.Pool(t+1)
-    pool.map(task, range(t+1))
-
+    for id in range(t+1):
+        tasks.append(multiprocessing.Process(target=task,args=[id]))
+    for t in tasks:
+        t.start()
+    for t in tasks:
+        t.join()
 
     duration=time.process_time()-beginning
 
@@ -78,7 +83,7 @@ def report(row):
     exists=False
     if path.exists("output_dataset.csv"):
         exists=True
-    
+
     ##The output dataset for generating curves
     csv_file=open("output_dataset.csv","a")
     writer=csv.writer(csv_file)
@@ -101,15 +106,16 @@ def main():
     for message_size in MESSAGE_SIZES:
         for n in N_VALUES:
             t_values= list(set( map(lambda ts:int(n*ts)+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
-            for t in t_values : 
+            for t in t_values :
                 ##KEY GENERATION;
                 keytime=generate_keys(n, t)
                 ###SIGNATURE;
                 ssize,stime=sign(message_size,t)
+
                  ###REPORT
                 report([t,n,keytime,message_size,ssize,stime])
-                
-    
+
+
                  
                  
     
