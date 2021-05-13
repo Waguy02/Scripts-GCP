@@ -4,58 +4,35 @@
 
 
 import subprocess,sys
-import multiprocessing
 import multiprocessing as mp
 
-NB_CPUS=mp.cpu_count()
-TASK_PER_CPU=8 ##TASK PER CPU
 
-
-
+MESSAGE_SIZES=[64,128]
+N_VALUES=[3,4,5,6,7,8,9,10]
+THRESHOLD_VALUES=[0.3,0.6,0.75]
 
 ##Start is used to parallelized processing
 START=0
 if len (sys.argv)>1:
     START = int(sys.argv[1])
 
-
-
-
 def task(t,n,message_size,id):
+    assert(t<=n)
     subprocess.call(["python3","gen_sign_verif_gcp.py",str(t),str(n), str(message_size),str(id + 1)])
-
-MESSAGE_SIZES=[64,128]
-N_VALUES=[5,10,15,50,100,500]
-THRESHOLD_VALUES=[0.3,0.4,0.5,0.7,0.8,0.9]
-
 
 for message_size in MESSAGE_SIZES:
     for n in N_VALUES:
-
-
-
         t_values= list(set( map(lambda ts:int(n*ts)+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
-
-
-
-
-        def f(id):
-            return task(t,n,message_size,id)
-        pool = mp.Pool(NB_CPUS, maxtasksperchild=int(NB_CPUS / n) + 1)
-        pool.map(f,t_values)
-
-
-        for t in t_values :
-            if t >n:
+        for t in t_values:
+            if t>=n:
                 break
-            tasks=[]
-            for id in range(n):
-                tasks.append(multiprocessing.Process(target=task,args=[t,n,message_size,id]))
-            for t in tasks:
-                t.start()
-            for t in tasks:
-                t.join()
+            def f(id):
+                task(t,n,message_size,id)
 
+            pool = mp.Pool(n)
+            pool.map(f,range(n))
+            pool.close()
+            pool.join()
 
 
 
