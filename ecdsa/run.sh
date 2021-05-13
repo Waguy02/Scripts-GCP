@@ -10,10 +10,10 @@ echo "Multi-party ECDSA parties:$n threshold:$t"
 #clean
 sleep 1
 
-rm keys?.store
+rm keys/keys?.store
 killall sm_manager gg18_keygen_client gg18_sign_client 2> /dev/null
 
-../target/release/examples/sm_manager &
+./sm_manager &
 
 sleep 2
 echo "keygen part"
@@ -21,7 +21,7 @@ echo "keygen part"
 for i in $(seq 1 $n)
 do
     echo "key gen for client $i out of $n"
-    ../target/release/examples/gg18_keygen_client http://127.0.0.1:8001 keys$i.store &
+    ./gg18_keygen_client http://127.0.0.1:8001 keys/keys$i.store &
     sleep 3
 done
 
@@ -33,7 +33,7 @@ echo "sign"
 for i in $(seq 1 $((t+1)));
 do
     echo "signing for client $i out of $((t+1))"
-    ../target/release/examples/gg18_sign_client http://127.0.0.1:8001 keys$i.store "KZen Networks" &
+    ./gg18_sign_client http://127.0.0.1:8001 keys/keys$i.store "KZen Networks" &
     sleep 3
 done
 

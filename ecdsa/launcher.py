@@ -35,7 +35,6 @@ def generate_message(message_size):
 
 def generate_keys(n,t):  
     os.system("rm keys/keys?.store")
-    os.system("rm signature")
     write_params(n, t)
     beginning=time.process_time()
     def task(id):
@@ -46,6 +45,7 @@ def generate_keys(n,t):
         tasks.append(multiprocessing.Process(target=task,args=[id]))
     for t in tasks:
         t.start()
+        time.sleep(3)
     for t in tasks:
         t.join()
     duration=time.process_time()-beginning                             
@@ -54,6 +54,7 @@ def generate_keys(n,t):
 
 
 def sign(message_size,t):
+    time.sleep(2)
     message=generate_message(message_size)
     beginning=time.process_time()
     def task(id):
@@ -61,9 +62,10 @@ def sign(message_size,t):
     tasks=[]        
     
     for id in range(t+1):
-        tasks.append(threading.Thread(target=task,args=[id]))
+        tasks.append(multiprocessing.Process(target=task,args=[id]))
     for t in tasks:
         t.start()
+        
     for t in tasks:
         t.join()
         
@@ -72,7 +74,7 @@ def sign(message_size,t):
     signature=open("signature","r");
     sign_size=sum(map(lambda elt:len(elt),signature.read().split(" ")))
     signature.close()
-
+    os.system("rm signature")
     return sign_size,duration
 
 
@@ -100,22 +102,37 @@ N_VALUES=[3,4,5,6,7,8,9,10]
 THRESHOLD_VALUES=[0.3,0.6,0.75]
 
 def main():
-    #LAUCHING SERVER
-    print("Launching server")
-    threading.Thread(target=lambda: os.system("./sm_manager ")).start()
+      #CLEAN
+
+    server=None
+    time.sleep(2)
     for message_size in MESSAGE_SIZES:
         for n in N_VALUES:
             t_values= list(set( map(lambda ts:int(n*ts)+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
-            for t in t_values : 
+            for t in t_values :
+                if t>=n:
+                    break
+                #cleaning            
+                os.system("killall sm_manager gg18_keygen_client gg18_sign_client 2> /dev/null")
+    
+                #LAUCHING SERVER
+                server=multiprocessing.Process(target=lambda: os.system("./sm_manager "))
+                server.start()
+                
+                
                 ##KEY GENERATION;
                 keytime=generate_keys(n, t)
+                
+                time.sleep(5)
+                
                 ###SIGNATURE;
                 ssize,stime=sign(message_size,t)
                 
                  ###REPORT
                 report([t,n,keytime,message_size,ssize,stime])
                 
-    
+                server.terminate()
+                
                  
                  
     
