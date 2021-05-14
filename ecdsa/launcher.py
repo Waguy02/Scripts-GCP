@@ -3,13 +3,9 @@
 ###
 
 
-import subprocess,sys,os,csv
+import subprocess,sys,os,csv,signal
 import multiprocessing,threading
-
 from os import path
-
-
-
 import time
 NB_CPUS=multiprocessing.cpu_count()
 TASK_PER_CPU=8 ##TASK PER CPU
@@ -22,6 +18,15 @@ if len (sys.argv)>1:
     START = int(sys.argv[1])
 
 import json,codecs
+
+
+
+MESSAGE_SIZES=[64,128]
+N_VALUES=[5,10,20,50,100]
+THRESHOLD_VALUES=[0.3,0.6,0.75]
+
+
+
 def write_params(n,t):
     with open('params.json','w') as f :
         f.write(json.dumps({"parties":str(n), "threshold":str(t)}))
@@ -34,6 +39,11 @@ def generate_message(message_size):
 
 
 def generate_keys(n,t):
+    
+    if not path.exists("target/keys"):
+        os.makedirs("target/keys")
+
+    
     os.system("rm keys/keys?.store")
     os.system("rm signature")
     write_params(n, t)
@@ -46,7 +56,7 @@ def generate_keys(n,t):
         tasks.append(multiprocessing.Process(target=task,args=[id]))
     for t in tasks:
         t.start()
-        time.sleep(3)
+        time.sleep(1)
     for t in tasks:
         t.join()
     duration=time.process_time()-beginning
@@ -65,7 +75,7 @@ def sign(message_size,t):
         tasks.append(multiprocessing.Process(target=task,args=[id]))
     for t in tasks:
         t.start()
-        time.sleep(3)
+        time.sleep(1)
     for t in tasks:
         t.join()
 
@@ -97,29 +107,33 @@ def report(row):
     writer.writerows([row])
     csv_file.close()
 
-MESSAGE_SIZES=[64,128]
-N_VALUES=[3,4,5,6,7,8,9,10]
-THRESHOLD_VALUES=[0.3,0.6,0.75]
-
 def main():
     #LAUCHING SERVER
     print("Launching server")
-    multiprocessing.Process(target=lambda: os.system("./sm_manager ")).start()
+    
     for message_size in MESSAGE_SIZES:
         for n in N_VALUES:
             t_values= list(set( map(lambda ts:int(n*ts)+1,THRESHOLD_VALUES )) )## Unique corresponding t_values
             for t in t_values :
+                "//RESTART ROCKET SERVER AT EACH ITERATION"
+                
+                
+                process_server=multiprocessing.Process(target=lambda : os.system("./sm_manager"))
+                process_server.start()
+                
                 ##KEY GENERATION;
                 keytime=generate_keys(n, t)
+                
                 ###SIGNATURE;
                 ssize,stime=sign(message_size,t)
-
+                
                  ###REPORT
-                report([t,n,keytime,message_size,ssize,stime])
-
-
-                 
-                 
+                report([t,n,keytime,message_size,ssize,stime])                
+                time.sleep(1)
+                
+                
+                process_server.terminate()             
+                os.system("killall sm_manager") 
     
 main()
 
