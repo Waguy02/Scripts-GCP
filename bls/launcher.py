@@ -8,7 +8,7 @@ import multiprocessing as mp
 
 
 MESSAGE_SIZES=[64,128]
-N_VALUES=[5,10,20,50,100]
+N_VALUES=[5,10,15,20]
 THRESHOLD_VALUES=[0.3,0.6,0.75]
 
 ##Start is used to parallelized processing
