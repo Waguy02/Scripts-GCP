@@ -47,7 +47,7 @@ def generate_keys(n,t):
     os.system("rm keys/keys?.store")
     os.system("rm signature")
     write_params(n, t)
-    beginning=time.process_time()
+    beginning=time.perf_counter()
     def task(id):
         subprocess.call(["./gg18_keygen_client", "http://127.0.0.1:8001", f'keys/keys{id+1}.store'])
 
@@ -59,14 +59,14 @@ def generate_keys(n,t):
         time.sleep(1)
     for t in tasks:
         t.join()
-    duration=time.process_time()-beginning
+    duration=time.perf_counter()-beginning
     return duration
 
 
 
 def sign(message_size,t):
     message=generate_message(message_size)
-    beginning=time.process_time()
+    beginning=time.perf_counter()
     def task(id):
             subprocess.call(["./gg18_sign_client", "http://127.0.0.1:8001", f'keys/keys{id+1}.store',message])
     tasks=[]
@@ -79,7 +79,7 @@ def sign(message_size,t):
     for t in tasks:
         t.join()
 
-    duration=time.process_time()-beginning
+    duration=time.perf_counter()-beginning
 
     signature=open("signature","r");
     sign_size=sum(map(lambda elt:len(elt),signature.read().split(" ")))

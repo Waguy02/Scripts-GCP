@@ -49,7 +49,7 @@ def generate_key(t,n):
 
 
 def sign(t,n,message):
-    begining=time.process_time()
+    begining=time.perf_counter()
     #print(f"./cli --addr {addr} sign -n {t}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}_{id}.txt")
     if id ==1 :
         subprocess.run(f"./cli --addr {addr} sign -n {n}  --key target/keys/key{t}_{n}_{id} --digits {message}|tail -n1  > target/signatures/signature{t}_{n}.txt",shell=True).stdout
@@ -58,7 +58,7 @@ def sign(t,n,message):
         return
 
 
-    duration=time.process_time()-begining
+    duration=time.perf_counter()-begining
     f=open(f'target/signatures/signature{t}_{n}.txt',"r")
     signature=f.read().split("Signature:")[1].strip()
     sign_len=len(signature)
@@ -82,9 +82,9 @@ def verify(t,n,message,signature):
     f.close()
     pk=pk_raw.split("Public key:")[1].strip()
     print("Public key ",pk)
-    begining=time.process_time()
+    begining=time.perf_counter()()
     subprocess.run(f'./cli --addr {addr} verify --digits {message} --signature {signature} --public-key {pk}',shell=True)
-    duration=time.process_time()-begining
+    duration=time.perf_counter()()-begining
 
     f=open(f'target/signatures/signature{t}_{n}.txt',"a")
     f.write(f"\nVerification duration: {duration}")
