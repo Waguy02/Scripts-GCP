@@ -82,9 +82,9 @@ def verify(t,n,message,signature):
     f.close()
     pk=pk_raw.split("Public key:")[1].strip()
     print("Public key ",pk)
-    begining=time.perf_counter()()
+    begining=time.perf_counter()
     subprocess.run(f'./cli --addr {addr} verify --digits {message} --signature {signature} --public-key {pk}',shell=True)
-    duration=time.perf_counter()()-begining
+    duration=time.perf_counter()-begining
 
     f=open(f'target/signatures/signature{t}_{n}.txt',"a")
     f.write(f"\nVerification duration: {duration}")
