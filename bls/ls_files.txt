@@ -1,6 +1,0 @@
-addr.txt
-cli
-gen_sign_verif_gcp.py
-ls_files.txt
-run_server.py
-target
